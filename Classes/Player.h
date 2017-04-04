@@ -12,20 +12,20 @@ public:
     Animate * jumpAnimate;
 
     static Player* create( );
-//    void move(int directionParam);
-//    void jump();
-//    void idle();
+    void move(int directionParam);
+    void jump();
+    void idle();
     void setPhysicsBody();
 
-//    void update();
+    void update();
 
 private:
     bool is_onGround;
     PhysicsBody* physicsBody;
     ~Player();
-//    bool moving;
+    bool moving;
 
-//    int direction;
+    int direction;
 //    Sprite* sprite;
 
     void initPlayer();

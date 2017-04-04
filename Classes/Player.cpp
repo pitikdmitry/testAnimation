@@ -31,6 +31,7 @@ Player* Player::create( )
 void Player::setPhysicsBody()
 {
     physicsBody = PhysicsBody::createBox(Size(86.0f,100.0f), PhysicsMaterial(0.1f, 1.0f, 0.0f));
+//    physicsBody = PhysicsBody::createCircle(100);
 //    physicsBody->setDynamic(true);
     physicsBody->setGravityEnable( true );
     addComponent(physicsBody);
@@ -50,77 +51,91 @@ void Player::setPhysicsBody()
 
 void Player::initPlayer()
 {
-//    moving = false;
+    moving = false;
     char str[100] = {0};
 
-//    Vector<SpriteFrame*> idleAnimFrames(10);
-//    for(int i = 1; i <= 10; i++) //Iterate for the number of images you have
-//    {
-//        sprintf(str, "Idle (%i).png",i);
-//        auto frame = SpriteFrame::create(str,Rect(0,0,80,100)); //The size of the images in an action should be the same
-//        idleAnimFrames.pushBack(frame);
-//    }
-//
-//    auto idleAnimation = Animation::createWithSpriteFrames(idleAnimFrames, 0.20f);
-//    idleAnimate = Animate::create(idleAnimation);
-//    idleAnimate->retain(); //Retain to use it later
-//    this->runAction(RepeatForever::create(idleAnimate)); //This will be the starting animation
+    Vector<SpriteFrame*> idleAnimFrames(10);
+    for(int i = 1; i <= 10; i++) //Iterate for the number of images you have
+    {
+        sprintf(str, "Idle (%i).png",i);
+        auto frame = SpriteFrame::create(str,Rect(0,0,80,100)); //The size of the images in an action should be the same
+        frame->setAnchorPoint(Vec2(0, 0));
+        idleAnimFrames.pushBack(frame);
+    }
+
+    auto idleAnimation = Animation::createWithSpriteFrames(idleAnimFrames, 0.20f);
+    idleAnimate = Animate::create(idleAnimation);
+    idleAnimate->retain(); //Retain to use it later
+    this->runAction(RepeatForever::create(idleAnimate)); //This will be the starting animation
 
     Vector<SpriteFrame*> moveAnimFrames(8);
     for(int i = 1; i <= 8; i++)
     {
         sprintf(str, "Run (%i).png",i);
         auto frame = SpriteFrame::create(str,Rect(0,0,80,100));
+        frame->setAnchorPoint(Vec2(0, 0));
         moveAnimFrames.pushBack(frame);
     }
 
     auto moveAnimation = Animation::createWithSpriteFrames(moveAnimFrames, 0.09f);
     moveAnimate = Animate::create(moveAnimation);
     moveAnimate->retain();
-    this->runAction(RepeatForever::create(moveAnimate));
-//    Vector<SpriteFrame*> jumpAnimFrames(8);
-//    for(int i = 1; i <= 8; i++)
-//    {
-//        sprintf(str, "Jump (%i).png",i);
-//        auto frame = SpriteFrame::create(str,Rect(0,0,80,100));
-//
-//        jumpAnimFrames.pushBack(frame);
-//    }
-//
-//    auto jumpAnimation = Animation::createWithSpriteFrames(jumpAnimFrames, 0.09f);
-//    jumpAnimate = Animate::create(jumpAnimation);
-//    jumpAnimate->retain();
+
+    Vector<SpriteFrame*> jumpAnimFrames(8);
+    for(int i = 1; i <= 8; i++)
+    {
+        sprintf(str, "Jump (%i).png",i);
+        auto frame = SpriteFrame::create(str,Rect(0,0,80,100));
+        frame->setAnchorPoint(Vec2(0, 0));
+        jumpAnimFrames.pushBack(frame);
+    }
+
+    auto jumpAnimation = Animation::createWithSpriteFrames(jumpAnimFrames, 0.09f);
+    jumpAnimate = Animate::create(jumpAnimation);
+    jumpAnimate->retain();
 }
-//
-//void Player::move(int directionParam)
-//{
-//    this->stopAllActions();
-//    this->runAction(RepeatForever::create(moveAnimate));
-//
-//    direction = directionParam;
-//    moving = true;
-//}
-//
-//void Player::idle()
-//{
-//    moving = false;
-//    this->stopAllActions();
-//    this->runAction(RepeatForever::create(idleAnimate));
-//}
-//
-//void Player::update()
-//{
-//    if(moving) //check if moving
-//    {
-//        if(direction == 0) //check if going left
-//        {
-//            this->setScaleX(-1); //flip
-//            this->setPositionX(this->getPositionX() - 5);
-//        }
-//        else
-//        {
-//            this->setScaleX(1); //flip
-//            this->setPositionX(this->getPositionX() + 5);
-//        }
-//    }
-//}
+
+void Player::move(int directionParam)
+{
+    this->stopAllActions();
+    this->runAction(RepeatForever::create(moveAnimate));
+
+    direction = directionParam;
+    moving = true;
+}
+
+void Player::idle()
+{
+    moving = false;
+    this->stopAllActions();
+    this->runAction(RepeatForever::create(idleAnimate));
+}
+
+void Player::update()
+{
+    if(moving) //check if moving
+    {
+        if(direction == 0) //check if going left
+        {
+            this->setScaleX(-1); //flip
+            this->setPositionX(this->getPositionX() - 5);
+        }
+        else
+        {
+            this->setScaleX(1); //flip
+            this->setPositionX(this->getPositionX() + 5);
+        }
+    }
+}
+
+void Player::jump()
+{
+    if(is_onGround == true)
+    {
+
+    }
+}
+
+
+
+

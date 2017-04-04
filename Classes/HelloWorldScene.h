@@ -21,9 +21,9 @@ public:
 private:
     Player * player;
 
-//    void update(float dt);
-//    void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
-//    void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
+    void update(float dt);
+    void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
+    void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
 //    bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event);
 //    void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
 };

@@ -20,7 +20,7 @@ Player* Player::create( )
 //        cocos2d::Node::
 //        Player::setPhysicsBody();
         player->autorelease();
-        player->initPlayer();
+
         return player;
     }
 
@@ -34,6 +34,7 @@ void Player::setPhysicsBody()
 //    physicsBody->setDynamic(true);
     physicsBody->setGravityEnable( true );
     addComponent(physicsBody);
+    initPlayer();
 }
 
 //Player::Player()
@@ -52,31 +53,31 @@ void Player::initPlayer()
 //    moving = false;
     char str[100] = {0};
 
-    Vector<SpriteFrame*> idleAnimFrames(10);
-    for(int i = 1; i <= 10; i++) //Iterate for the number of images you have
-    {
-        sprintf(str, "Idle (%i).png",i);
-        auto frame = SpriteFrame::create(str,Rect(0,0,80,100)); //The size of the images in an action should be the same
-        idleAnimFrames.pushBack(frame);
-    }
-
-    auto idleAnimation = Animation::createWithSpriteFrames(idleAnimFrames, 0.20f);
-    idleAnimate = Animate::create(idleAnimation);
-    idleAnimate->retain(); //Retain to use it later
-    this->runAction(RepeatForever::create(idleAnimate)); //This will be the starting animation
-
-//    Vector<SpriteFrame*> moveAnimFrames(8);
-//    for(int i = 1; i <= 8; i++)
+//    Vector<SpriteFrame*> idleAnimFrames(10);
+//    for(int i = 1; i <= 10; i++) //Iterate for the number of images you have
 //    {
-//        sprintf(str, "Run (%i).png",i);
-//        auto frame = SpriteFrame::create(str,Rect(0,0,80,100));
-//        moveAnimFrames.pushBack(frame);
+//        sprintf(str, "Idle (%i).png",i);
+//        auto frame = SpriteFrame::create(str,Rect(0,0,80,100)); //The size of the images in an action should be the same
+//        idleAnimFrames.pushBack(frame);
 //    }
 //
-//    auto moveAnimation = Animation::createWithSpriteFrames(moveAnimFrames, 0.09f);
-//    moveAnimate = Animate::create(moveAnimation);
-//    moveAnimate->retain();
+//    auto idleAnimation = Animation::createWithSpriteFrames(idleAnimFrames, 0.20f);
+//    idleAnimate = Animate::create(idleAnimation);
+//    idleAnimate->retain(); //Retain to use it later
+//    this->runAction(RepeatForever::create(idleAnimate)); //This will be the starting animation
 
+    Vector<SpriteFrame*> moveAnimFrames(8);
+    for(int i = 1; i <= 8; i++)
+    {
+        sprintf(str, "Run (%i).png",i);
+        auto frame = SpriteFrame::create(str,Rect(0,0,80,100));
+        moveAnimFrames.pushBack(frame);
+    }
+
+    auto moveAnimation = Animation::createWithSpriteFrames(moveAnimFrames, 0.09f);
+    moveAnimate = Animate::create(moveAnimation);
+    moveAnimate->retain();
+    this->runAction(RepeatForever::create(moveAnimate));
 //    Vector<SpriteFrame*> jumpAnimFrames(8);
 //    for(int i = 1; i <= 8; i++)
 //    {

@@ -1,4 +1,7 @@
 #include "HelloWorldScene.h"
+#include <iostream>
+#include <functional>
+#define OBSTACLE_COLLISION_BITMASK
 
 USING_NS_CC;
 
@@ -42,10 +45,12 @@ bool HelloWorld::init()
 //    Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
 //
+
     for(int i = 0; i < 15; ++i)
     {
         auto physicsBody = PhysicsBody::createBox(Size(50.0f,50.0f));
-
+        physicsBody->setCollisionBitmask( GROUND_BITMASK );
+//        physicsBody->setContactTestBitmask( true );
         physicsBody->setDynamic(false);
         auto sprite = Sprite::create("Crate.png");
         sprite->setPosition(i * 50, 50);
@@ -56,9 +61,17 @@ bool HelloWorld::init()
     }
     auto edgeBody = PhysicsBody::createEdgeBox( visibleSize, PHYSICSBODY_MATERIAL_DEFAULT, 3 );
     auto edgeNode = Node::create();
+//    edgeBody->setCollisionBitmask( OBSTACLE_COLLISION_BITMASK );
     edgeNode->setPosition( Point( visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y ) );
     edgeNode->setPhysicsBody( edgeBody );
     this->addChild( edgeNode );
+
+    auto contactListener = EventListenerPhysicsContact::create( );
+//    std::bind(MyClass::my_callback_with_param, this, 1)
+    contactListener->onContactBegin = CC_CALLBACK_1( HelloWorld::onContactBegin, this);
+//    contactListener->onContactBegin = std::bind( HelloWorld::onContactBegin, this, player);
+
+    Director::getInstance( )->getEventDispatcher( )->addEventListenerWithSceneGraphPriority( contactListener, this );
 
 
     auto listener = EventListenerKeyboard::create();
@@ -127,3 +140,22 @@ void HelloWorld::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
 {
     player->idle();
 }
+
+
+
+bool HelloWorld::onContactBegin( cocos2d::PhysicsContact &contact)
+{
+    PhysicsBody *a = contact.getShapeA( )->getBody();
+    PhysicsBody *b = contact.getShapeB( )->getBody();
+
+    if ( ( PLAYER_BITMASK == a->getCollisionBitmask( ) && GROUND_BITMASK == b->getCollisionBitmask() ) || ( PLAYER_BITMASK == b->getCollisionBitmask( ) && GROUND_BITMASK == a->getCollisionBitmask() ) )
+    {
+//        ret = false;
+        std::cout<<"collision";
+    }
+//    Sprite *player1 = contact.getShapeA( )->getSprite();
+
+    return false;
+}
+
+

@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "Player.h"
+#include "definitions.h"
 
 class HelloWorld : public cocos2d::Layer
 {
@@ -17,6 +18,8 @@ public:
 //    void menuCloseCallback(cocos2d::Ref* pSender);
 
     // implement the "static create()" method manually
+    bool onContactBegin( cocos2d::PhysicsContact &contact );
+
     CREATE_FUNC(HelloWorld);
 private:
     Player * player;

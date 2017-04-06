@@ -19,6 +19,7 @@ public:
 
     // implement the "static create()" method manually
     bool onContactBegin( cocos2d::PhysicsContact &contact );
+//    bool HelloWorld::onContactPostSolve( cocos2d::PhysicsContact &contact, const PhysicsContactPostSolve& solve);
 
     CREATE_FUNC(HelloWorld);
 private:

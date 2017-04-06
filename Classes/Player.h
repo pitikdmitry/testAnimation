@@ -16,15 +16,18 @@ public:
     void jump();
     void idle();
     void setPhysicsBody();
+    bool moving;
+    bool jumping;
+    bool idling;
 
     void update();
 
-
-private:
+//    void set_is_onGround(bool b){ is_onGround = b; }
     bool is_onGround;
+private:
+
     PhysicsBody* physicsBody;
     ~Player();
-    bool moving;
 
     int direction;
 //    Sprite* sprite;

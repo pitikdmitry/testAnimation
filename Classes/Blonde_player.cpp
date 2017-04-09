@@ -52,6 +52,7 @@ void Blonde_player::initPlayer()
     idleBody->setContactTestBitmask( true );
     idleBody->setDynamic(true);
     idleBody->setGravityEnable( true );
+    idleBody->setRotationEnable( false );
     addComponent( idleBody );
 
     Vector<SpriteFrame*> moveAnimFrames(8);

@@ -156,7 +156,7 @@ void Player::update( )
                 is_onGround = false;
             }
         }
-        if ( is_onGround == false && false == shooting && current_anim != jump_fire_anim && timer < 250 ){
+        if ( is_onGround == false && current_anim != jump_fire_anim && timer < 250 ){
             jump_fire();
         }
     }

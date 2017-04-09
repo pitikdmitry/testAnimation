@@ -1,7 +1,5 @@
 #include "HelloWorldScene.h"
 #include <iostream>
-#include <functional>
-#define OBSTACLE_COLLISION_BITMASK
 
 USING_NS_CC;
 
@@ -21,8 +19,6 @@ Scene* HelloWorld::createScene()
     // return the scene
     return scene;
 }
-
-
 
 
 // on "init" you need to initialize your instance
@@ -45,8 +41,18 @@ bool HelloWorld::init()
 //    Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
 //
+    auto physicsBody2 = PhysicsBody::createBox(Size(50.0f,50.0f), PhysicsMaterial(0.1f, .1f, 0.0f));
+    physicsBody2->setCollisionBitmask( GROUND_BITMASK );
+    physicsBody2->setContactTestBitmask( true );
+    physicsBody2->setDynamic(false);
+    auto sprt = Sprite::create("Crate.png");
+    sprt->setPosition(150, 150);
+    addChild(sprt);
+    sprt->addComponent(physicsBody2);
 
-    for(int i = 0; i < 15; ++i)
+
+
+    for(int i = 0; i < 20; ++i)
     {
         auto physicsBody = PhysicsBody::createBox(Size(50.0f,50.0f), PhysicsMaterial(0.1f, .1f, 0.0f));
         physicsBody->setCollisionBitmask( GROUND_BITMASK );
@@ -55,7 +61,6 @@ bool HelloWorld::init()
         auto sprite = Sprite::create("Crate.png");
         sprite->setPosition(i * 50, 50);
         addChild(sprite);
-//apply physicsBody to the sprite
         sprite->addComponent(physicsBody);
 
     }
@@ -66,13 +71,11 @@ bool HelloWorld::init()
     edgeNode->setPhysicsBody( edgeBody );
     this->addChild( edgeNode );
 
-    player = Player::create();
+    player = Blonde_player::create();
     player->setPosition(Vec2(origin.x + visibleSize.width / 2
             , origin.y + visibleSize.height / 2));
-    player->setPhysicsBody();
+    player->initPlayer();
     this->addChild(player, 5);
-
-
 
     auto listener = EventListenerKeyboard::create();
     listener->onKeyPressed = CC_CALLBACK_2(HelloWorld::onKeyPressed, this);
@@ -82,10 +85,15 @@ bool HelloWorld::init()
 
     std::function<void(PhysicsContact& contact, const PhysicsContactPostSolve& solve)> onContactPostSolve;
     auto contactListener = EventListenerPhysicsContact::create( );
-//    std::bind(MyClass::my_callback_with_param, this, 1)
     contactListener->onContactBegin = CC_CALLBACK_1( HelloWorld::onContactBegin, this);
-//    contactListener->onContactPostSolve = CC_CALLBACK_2(HelloWorld::onContactPostSolve,onContactBegin, this);
     Director::getInstance( )->getEventDispatcher( )->addEventListenerWithSceneGraphPriority( contactListener, this );
+
+    auto _mouseListener = EventListenerMouse::create();
+    _mouseListener->onMouseUp = CC_CALLBACK_1(HelloWorld::onMouseUp, this);
+    _mouseListener->onMouseDown = CC_CALLBACK_1(HelloWorld::onMouseDown, this);
+
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(_mouseListener, this);
+
 
 
     this->scheduleUpdate();
@@ -93,47 +101,50 @@ bool HelloWorld::init()
     return true;
 }
 
-
-
 void HelloWorld::update(float dt)
 {
     player->update();
+    if( true == player->shooting && player->timer % 10 == 0 ){
+        Bullet* bul = Bullet::create( player );
+        bullets.push_back( bul );
+        addChild( bul );
+    }
 }
-
-//bool HelloWorld::onTouchBegan(Touch *touch, Event *event)
-//{
-//    if(touch->getLocation().x < player->getPositionX())
-//    {
-//        player->move(0); // param '0' for left
-//    }
-//    if(touch->getLocation().x > player->getPositionX())
-//    {
-//        player->move(1); // param '0' for right
-//    }
-//
-//    return true;
-//}
 
 void HelloWorld::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 {
         switch (keyCode) {
             case cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW:
             case cocos2d::EventKeyboard::KeyCode::KEY_A:
-                player->move(0);
+                player->moving = true;
+                player->direction = 0;
+                player->key_A = true;
                 break;
             case cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
             case cocos2d::EventKeyboard::KeyCode::KEY_D:
-                player->move(1);
+                player->moving = true;
+                player->direction = 1;
+                player->key_D = true;
                 break;
             case cocos2d::EventKeyboard::KeyCode::KEY_UP_ARROW:
             case cocos2d::EventKeyboard::KeyCode::KEY_W:
-                player->jump();
+                player->jumping = true;
                 break;
             case cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW:
             case cocos2d::EventKeyboard::KeyCode::KEY_S:
+
+                break;
+            case cocos2d::EventKeyboard::KeyCode::KEY_U:
+                player->death = true;
+                break;
+            case cocos2d::EventKeyboard::KeyCode::KEY_O:
+                player->jetpack = true;
+                break;
+            case cocos2d::EventKeyboard::KeyCode::KEY_P:
+                player->jetpack = false;
                 break;
             default:
-                player->idle();
+                //
                 break;
         }
 }
@@ -141,89 +152,93 @@ void HelloWorld::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 void HelloWorld::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
 {
     switch (keyCode) {
+
         case cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW:
         case cocos2d::EventKeyboard::KeyCode::KEY_A:
-            if(true == player->is_onGround)
-            {
+            player->key_A = false;
+            if( false == player->key_D ){
                 player->moving = false;
-                player->jumping = false;
+            }
+            else{
+                player->direction = 1;
+            }
+            if( false == player->jumping && false == player->moving ){
                 player->idling = true;
             }
-            else
-            {
-                player->moving = false;
-                player->jumping = true;
-                player->idling = false;
-            }
             break;
+
         case cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
         case cocos2d::EventKeyboard::KeyCode::KEY_D:
-            if(true == player->is_onGround)
-            {
+            player->key_D = false;
+            if( false == player->key_A ){
                 player->moving = false;
-                player->jumping = false;
+            }
+            else{
+                player->direction = 0;
+            }
+            if( false == player->jumping && false == player->moving ){
                 player->idling = true;
             }
-            else
-            {
-                player->moving = false;
-                player->jumping = true;
-                player->idling = false;
-            }
             break;
+
         case cocos2d::EventKeyboard::KeyCode::KEY_UP_ARROW:
         case cocos2d::EventKeyboard::KeyCode::KEY_W:
-            if(true == player->moving )
-            {
-                player->jumping = false;
-                player->idling = false;
-            }
-            else
-            {
-                player->jumping = false;
-                player->idling = true;
-            }
+            player->jumping = false;
             break;
+
         case cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW:
         case cocos2d::EventKeyboard::KeyCode::KEY_S:
             break;
+
         default:
             break;
     }
-
-    std::cout<<"released";
-//    player->idle();
-
-
-//    player->idling = true;
 }
 
 bool HelloWorld::onContactBegin( cocos2d::PhysicsContact &contact)
 {
-    PhysicsBody *a = contact.getShapeA( )->getBody();
-    PhysicsBody *b = contact.getShapeB( )->getBody();
+    PhysicsBody *a = contact.getShapeA( )->getBody( );
+    PhysicsBody *b = contact.getShapeB( )->getBody( );
 
     if ( ( PLAYER_BITMASK == a->getCollisionBitmask( ) && GROUND_BITMASK == b->getCollisionBitmask() ) || ( PLAYER_BITMASK == b->getCollisionBitmask( ) && GROUND_BITMASK == a->getCollisionBitmask() ) )
     {
         player->is_onGround = true;
-        player->jumping = false;
-        if(false == player->moving)
-        {
-            player->idling = true;
-        }
-        else
-        {
-            player->moving = true;
-        }
-//        player->idle();
-        std::cout<<"first";
     }
-//    Sprite *player1 = contact.getShapeA( )->getSprite();
-
     return true;
 }
 
-//bool HelloWorld::onContactPostSolve( cocos2d::PhysicsContact &contact, const PhysicsContactPostSolve& solve)
-//{
-//
-//}
+
+void HelloWorld::onMouseUp(Event *event)
+{
+    player->shooting = false;
+    player->timer = 0;
+}
+
+void HelloWorld::onMouseDown(Event *event)
+{
+    std::cout<<"mouse down";
+    player->shooting = true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

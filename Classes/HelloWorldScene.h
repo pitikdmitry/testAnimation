@@ -3,7 +3,10 @@
 
 #include "cocos2d.h"
 #include "Player.h"
+#include "Blonde_player.h"
 #include "definitions.h"
+#include "Bullet.h"
+#include <vector>
 
 class HelloWorld : public cocos2d::Layer
 {
@@ -23,11 +26,16 @@ public:
 
     CREATE_FUNC(HelloWorld);
 private:
-    Player * player;
+    Player* player;
+    std::vector< Bullet* > bullets;
+    Sprite* sprt;
 
     void update(float dt);
     void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
     void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
+    void onMouseDown(Event *event);
+    void onMouseUp(Event *event);
+
 //    bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event);
 //    void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
 };

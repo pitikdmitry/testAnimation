@@ -137,7 +137,7 @@ set(GAME_HEADERS
   Classes/AppDelegate.h
   Classes/HelloWorldScene.h
   ${PLATFORM_SPECIFIC_HEADERS}
-        Classes/Player.cpp Classes/Player.h Classes/definitions.h)
+        Classes/Player.cpp Classes/Player.h Classes/definitions.h Classes/Blonde_player.cpp Classes/Blonde_player.h Classes/Bullet.cpp Classes/Bullet.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

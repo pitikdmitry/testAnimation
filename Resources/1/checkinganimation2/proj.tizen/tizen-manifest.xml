@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<manifest xmlns="http://tizen.org/ns/packages" api-version="2.3" package="com.MyCompany.MyGame" version="1.0.0">
-    <ui-application appid="com.MyCompany.MyGame" exec="hellocpp" multiple="false" nodisplay="false" taskmanage="true" type="capp">
-        <label>checkinganimation2</label>
-        <icon>checkinganimation2.png</icon>
-    </ui-application>
-</manifest>

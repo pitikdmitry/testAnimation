@@ -5,7 +5,7 @@
 Player* Blonde_player::create( )
 {
     Player * blonde_player = new Blonde_player( );
-    if( blonde_player && blonde_player->initWithFile ("1/Idle_001.png" ) )
+    if( blonde_player && blonde_player->initWithFile ("1/idle_001.png" ) )
     {
         blonde_player->autorelease( );
         return blonde_player;
@@ -33,12 +33,12 @@ void Blonde_player::initPlayer()
     for(int i = 0; i <= 11; i++)
     {
         if( i < 10){
-            sprintf(str, "1/Idle_00%i.png",i);
+            sprintf(str, "1/idle_00%i.png",i);
         }
         else{
-            sprintf(str, "1/Idle_0%i.png",i);
+            sprintf(str, "1/idle_0%i.png",i);
         }
-        auto frame = SpriteFrame::create(str,Rect(0,0,153,153));
+        auto frame = SpriteFrame::create(str,Rect(0,0,69,142));
         frame->setAnchorPoint(Vec2(0.5, 0));
         idleAnimFrames.pushBack(frame);
     }
@@ -47,7 +47,7 @@ void Blonde_player::initPlayer()
     idleAnimate->retain();
     this->runAction(RepeatForever::create(idleAnimate));
 
-    idleBody = PhysicsBody::createBox(Size(70.0f,153.0f), PhysicsMaterial(0.1f, 1.0f, 0.0f));
+    idleBody = PhysicsBody::createBox(Size(70.0f,150.0f), PhysicsMaterial(0.1f, 1.0f, 0.0f));
     idleBody->setCollisionBitmask( PLAYER_BITMASK );
     idleBody->setContactTestBitmask( true );
     idleBody->setDynamic(true);
@@ -58,8 +58,8 @@ void Blonde_player::initPlayer()
     Vector<SpriteFrame*> moveAnimFrames(8);
     for(int i = 0; i <= 7; i++)
     {
-        sprintf(str, "1/Run_00%i.png",i);
-        auto frame = SpriteFrame::create(str,Rect(0,0,153,153));
+        sprintf(str, "1/run_00%i.png",i);
+        auto frame = SpriteFrame::create(str,Rect(0,0,79,149));
         frame->setAnchorPoint(Vec2(0.5, 0));
         moveAnimFrames.pushBack(frame);
     }
@@ -70,8 +70,8 @@ void Blonde_player::initPlayer()
     Vector<SpriteFrame*> move_fireAnimFrames(8);
     for(int i = 0; i <= 7; i++)
     {
-        sprintf(str, "1/RunWithGun_00%i.png",i);
-        auto frame = SpriteFrame::create(str,Rect(0,0,153,153));
+        sprintf(str, "1/run_with_gun_00%i.png",i);
+        auto frame = SpriteFrame::create(str,Rect(0,0,83,148));
         frame->setAnchorPoint(Vec2(0.5, 0));
         move_fireAnimFrames.pushBack(frame);
     }
@@ -89,8 +89,8 @@ void Blonde_player::initPlayer()
     Vector<SpriteFrame*> jumpAnimFrames(8);//не забывать менять
     for(int i = 0; i <= 7; i++)
     {
-        sprintf(str, "1/Jump_00%i.png",i);
-        auto frame = SpriteFrame::create(str,Rect(0,0,153,153));
+        sprintf(str, "1/jump_00%i.png",i);
+        auto frame = SpriteFrame::create(str,Rect(0,0,87,152));
         frame->setAnchorPoint(Vec2(0.5, 0));
         jumpAnimFrames.pushBack(frame);
     }
@@ -101,8 +101,8 @@ void Blonde_player::initPlayer()
     Vector<SpriteFrame*> deathAnimFrames(10);//не забывать менять
     for(int i = 0; i <= 9; i++)
     {
-        sprintf(str, "1/Die_00%i.png",i);
-        auto frame = SpriteFrame::create(str,Rect(0,0,153,153));
+        sprintf(str, "1/die_00%i.png",i);
+        auto frame = SpriteFrame::create(str,Rect(0,0,152,149));
         frame->setAnchorPoint(Vec2(0.5, 0));
         deathAnimFrames.pushBack(frame);
     }
@@ -114,8 +114,8 @@ void Blonde_player::initPlayer()
     Vector<SpriteFrame*> flyingAnimFrames(6);//не забывать менять
     for(int i = 0; i <= 5; i++)
     {
-        sprintf(str, "1/Jetpack_00%i.png",i);
-        auto frame = SpriteFrame::create(str,Rect(0,0,153,153));
+        sprintf(str, "1/jetpack_00%i.png",i);
+        auto frame = SpriteFrame::create(str,Rect(0,0,153,128));
         frame->setAnchorPoint(Vec2(0.5, 0));
         flyingAnimFrames.pushBack(frame);
     }
@@ -126,8 +126,8 @@ void Blonde_player::initPlayer()
     Vector<SpriteFrame*> shootingAnimFrames(4);//не забывать менять
     for(int i = 0; i <= 3; i++)
     {
-        sprintf(str, "1/Shot_00%i.png",i);
-        auto frame = SpriteFrame::create(str,Rect(0,0,153,153));
+        sprintf(str, "1/shot_00%i.png",i);
+        auto frame = SpriteFrame::create(str,Rect(0,0,105,142));
         frame->setAnchorPoint(Vec2(0.5, 0));
         shootingAnimFrames.pushBack(frame);
     }
@@ -135,27 +135,32 @@ void Blonde_player::initPlayer()
     shootingAnimate = Animate::create(shootingAnimation);
     shootingAnimate->retain();
 
-    Vector<SpriteFrame*> stay_with_gunAnimFrames(2);//не забывать менять
-    for(int i = 0; i <= 1; i++)
+    Vector<SpriteFrame*> stay_with_gunAnimFrames(12);//не забывать менять
+    for(int i = 0; i <= 11; i++)
     {
-        sprintf(str, "1/stayWithGun_00%i.png",i);
-        auto frame = SpriteFrame::create(str,Rect(0,0,153,153));
+        if( i < 10){
+            sprintf(str, "1/idle_with_gun_00%i.png",i);
+        }
+        else{
+            sprintf(str, "1/idle_with_gun_0%i.png",i);
+        }
+        auto frame = SpriteFrame::create(str,Rect(0,0,86,142));
         frame->setAnchorPoint(Vec2(0.5, 0));
         stay_with_gunAnimFrames.pushBack(frame);
     }
-    auto stay_with_gunAnimation = Animation::createWithSpriteFrames(stay_with_gunAnimFrames, 1.0f, 10);
+    auto stay_with_gunAnimation = Animation::createWithSpriteFrames(stay_with_gunAnimFrames, 0.2f, 10);
     stay_with_gunAnimate = Animate::create(stay_with_gunAnimation);
     stay_with_gunAnimate->retain();
 
-    Vector<SpriteFrame*> jump_fireAnimFrames(3);//не забывать менять
-    for(int i = 0; i <= 2; i++)
+    Vector<SpriteFrame*> jump_fireAnimFrames(8);//не забывать менять
+    for(int i = 0; i <= 7; i++)
     {
-        sprintf(str, "1/jump_fire_00%i.png",i);
-        auto frame = SpriteFrame::create(str,Rect(0,0,153,153));
+        sprintf(str, "1/jump_with_gun_00%i.png",i);
+        auto frame = SpriteFrame::create(str,Rect(0,0,90,152));
         frame->setAnchorPoint(Vec2(0.5, 0));
         jump_fireAnimFrames.pushBack(frame);
     }
-    auto jump_fireAnimation = Animation::createWithSpriteFrames(jump_fireAnimFrames, 0.5f, 10);
+    auto jump_fireAnimation = Animation::createWithSpriteFrames(jump_fireAnimFrames, 0.15f, 10);
     jump_fireAnimate = Animate::create(jump_fireAnimation);
     jump_fireAnimate->retain();
 }
